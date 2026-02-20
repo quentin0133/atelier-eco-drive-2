@@ -1,11 +1,17 @@
 db.telemetry_history.drop();
 db.vehicles.drop();
 
+function randomDate(start, end) {
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
+
 const bulkVehicles = Array.from(
     { length: 100000 }, (_, i) => (
         {
-            status: ["AVAILABLE", "UNAVAILABLE"][Math.floor(Math.random() * 2)],
             brand: ["Audi", "Renault", "Peugeot", "Tesla", "Citroën", "Twingo"][Math.floor(Math.random() * 6)],
+            status: ["AVAILABLE", "UNAVAILABLE"][Math.floor(Math.random() * 2)],
             model: {
                 name: ["San diego", "Michaelo", "Model X", "Model Y", "Model Z", "Danielo"][Math.floor(Math.random() * 6)]
             },
@@ -21,11 +27,12 @@ let vehiclesResult = db.vehicles.insertMany(bulkVehicles);
 const bulkTelemetryHistories = Array.from(
     { length: 100000 }, (_, i) => (
         {
-            battery_level: Math.random() * 100,
             last_position: {
-                latitude: Math.random() * 15 + 6,
-                longitude: Math.random() * 15 + 6
+                latitude: Math.random() * 5,
+                longitude: Math.random() * 5
             },
+            timestamp: randomDate(new Date(2025, 0, 1), new Date()),
+            battery_level: Math.floor(Math.random() * 100),
             vehicle_id: vehiclesResult.insertedIds[i]
         }
     )
