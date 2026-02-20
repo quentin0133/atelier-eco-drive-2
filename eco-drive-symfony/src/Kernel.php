@@ -12,16 +12,26 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
-    {
-        $loader->load(__DIR__.'/../config/{packages}/*.yaml', 'glob');
-        $loader->load(__DIR__.'/../config/{packages}/'.$this->environment.'/*.yaml', 'glob');
-        $loader->load(__DIR__.'/../config/services.yaml', 'glob');
-        $loader->load(__DIR__.'/../config/{services}_'.$this->environment.'.yaml', 'glob');
+protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+{
+    $confDir = dirname(__DIR__).'/config';
+
+    $loader->load($confDir.'/packages/*.yaml', 'glob');
+
+    if (is_dir($confDir.'/packages/'.$this->environment)) {
+        $loader->load($confDir.'/packages/'.$this->environment.'/*.yaml', 'glob');
     }
+
+    $loader->load($confDir.'/services.yaml');
+
+    if (is_file($confDir.'/services_'.$this->environment.'.yaml')) {
+        $loader->load($confDir.'/services_'.$this->environment.'.yaml');
+    }
+}
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('src/Controller/', 'attribute');
+        $routes->import(__DIR__.'/Controller/', 'attribute')
+            ->prefix('/');
     }
 }

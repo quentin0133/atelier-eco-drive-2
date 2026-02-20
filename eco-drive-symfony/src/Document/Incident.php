@@ -1,18 +1,19 @@
 <?php
 namespace App\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbeddedDocument;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Field;
 
-#[MongoDB\EmbeddedDocument]
+#[EmbeddedDocument]
 class Incident
 {
-    #[MongoDB\Field(type: "date")]
+    #[Field(type: "date")]
     private ?string $date = null;
 
-    #[MongoDB\Field(type: "string")]
+    #[Field(type: "string")]
     private ?string $type = null;
 
-    #[MongoDB\Field(type: "string")]
+    #[Field(type: "string")]
     private ?string $description = null;
 
     public function getDate(): ?string

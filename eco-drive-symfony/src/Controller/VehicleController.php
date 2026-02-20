@@ -2,16 +2,15 @@
 namespace App\Controller;
 
 use App\Document\Vehicle;
-use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class VehicleController
 {
     #[Route('/vehicle', name: 'list', methods: ['GET'])]
-    public function list(ManagerRegistry $registry): JsonResponse
+    public function list(DocumentManager $dm): JsonResponse
     {
-        $dm = $registry->getManager();
         $vehicles = $dm->getRepository(Vehicle::class)->findAll();
 
         $data = array_map(fn($vehicle) => [
@@ -26,7 +25,10 @@ class VehicleController
                 'type' => $h->getType(),
             ], $vehicle->getIncidentHistories()->toArray()),
         ], $vehicles);
-
+        dump($dm->getMetadataFactory()->getAllMetadata());
+        die();
         return new JsonResponse($data);
+
     }
+
 }

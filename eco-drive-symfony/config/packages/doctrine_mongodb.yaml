@@ -8,9 +8,12 @@ doctrine_mongodb:
     default_database: '%env(MONGODB_DB)%'
     document_managers:
         default:
-            auto_mapping: true
+            auto_mapping: false
             mappings:
                 App:
+                    is_bundle: false
+                    type: attribute
+                    mapping: true
                     dir: '%kernel.project_dir%/src/Document'
                     prefix: 'App\Document'
 

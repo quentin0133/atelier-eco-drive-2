@@ -1,12 +1,13 @@
 <?php
 namespace App\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbeddedDocument;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Field;
 
-#[MongoDB\EmbeddedDocument]
+#[EmbeddedDocument]
 class Model
 {
-    #[MongoDB\Field(type: "string")]
+    #[Field(type: "string")]
     private ?string $name = null;
 
     public function getName(): ?string

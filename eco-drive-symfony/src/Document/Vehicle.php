@@ -1,27 +1,32 @@
 <?php
+
 namespace App\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Field;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbedOne;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbedMany;
 
-#[MongoDB\Document(collection: "vehicles")]
+#[Document(collection: "vehicles")]
 class Vehicle
 {
-    #[MongoDB\Id]
+    #[Id]
     private ?string $id = null;
 
-    #[MongoDB\Field(type: "string")]
+    #[Field(type: "string")]
     private ?string $brand = null;
 
-    #[MongoDB\Field(type: "string")]
+    #[Field(type: "string")]
     private ?string $status = null;
 
-    #[MongoDB\EmbedOne]
+    #[EmbedOne(targetDocument: Model::class)]
     private ?Model $model = null;
 
-    #[MongoDB\Field(type: "string")]
+    #[Field(type: "string")]
     private ?string $registration = null;
 
-    #[MongoDB\EmbedMany]
+    #[EmbedMany(targetDocument: Incident::class)]
     private array $incidentHistories = [];
 
     public function getId(): ?string
