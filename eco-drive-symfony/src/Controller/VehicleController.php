@@ -1,34 +1,62 @@
 <?php
+
 namespace App\Controller;
 
 use App\Document\Vehicle;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\VehicleRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Document\Incident;
+use App\Form\IncidentType;
+use Symfony\Component\HttpFoundation\Request;
 
-class VehicleController
+class VehicleController extends AbstractController
 {
-    #[Route('/vehicle', name: 'list', methods: ['GET'])]
-    public function list(DocumentManager $dm): JsonResponse
+    #[Route('/vehicles', name: 'vehicles_index', methods: ['GET'])]
+    public function index(DocumentManager $dm): Response
     {
-        $vehicles = $dm->getRepository(Vehicle::class)->findAll();
+        /** @var VehicleRepository $repo */
+        $repo = $dm->getRepository(Vehicle::class);
 
-        $data = array_map(fn($vehicle) => [
-            'id' => $vehicle->getId(),
-            'brand' => $vehicle->getBrand(),
-            'status' => $vehicle->getStatus(),
-            'model' => $vehicle->getModel(),
-            'registration' => $vehicle->getRegistration(),
-            'incidentHistories' => array_map(fn($h) => [
-                'id' => $h->getId(),
-                'date' => $h->getDate()?->format(DATE_ATOM),
-                'type' => $h->getType(),
-            ], $vehicle->getIncidentHistories()->toArray()),
-        ], $vehicles);
-        dump($dm->getMetadataFactory()->getAllMetadata());
-        die();
-        return new JsonResponse($data);
+        $vehicles = method_exists($repo, 'findAllOrdered')
+            ? $repo->findAllOrdered()
+            : $repo->findAll();
 
+        return $this->render('vehicle/index.html.twig', [
+            'vehicles' => $vehicles,
+        ]);
     }
 
+    #[Route('/vehicles/{id}/incident', name: 'add_incident', methods: ['GET', 'POST'])]
+    public function addIncident(string $id, Request $request, DocumentManager $dm): Response
+    {
+        /** @var Vehicle|null $vehicle */
+        $vehicle = $dm->getRepository(Vehicle::class)->find($id);
+
+        if (!$vehicle) {
+            throw $this->createNotFoundException('Véhicule introuvable');
+        }
+
+        $incident = new Incident();
+        $form = $this->createForm(IncidentType::class, $incident);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $vehicle->addIncident($incident);
+
+            $dm->persist($vehicle);
+            $dm->flush();
+
+            $this->addFlash('success', 'Incident ajouté');
+
+            return $this->redirectToRoute('vehicles_index');
+        }
+
+        return $this->render('vehicle/add_incident.html.twig', [
+            'vehicle' => $vehicle,
+            'form' => $form->createView(),
+        ]);
+    }
 }

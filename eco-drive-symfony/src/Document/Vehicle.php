@@ -2,90 +2,61 @@
 
 namespace App\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Document;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Field;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbedOne;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbedMany;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
-#[Document(collection: "vehicles")]
+#[ODM\Document(collection: "vehicles", repositoryClass: \App\Repository\VehicleRepository::class)]
 class Vehicle
 {
-    #[Id]
+    #[ODM\Id]
     private ?string $id = null;
 
-    #[Field(type: "string")]
-    private ?string $brand = null;
+    #[ODM\Field(type: "string")]
+    private string $brand;
 
-    #[Field(type: "string")]
-    private ?string $status = null;
+    #[ODM\Field(type: "string")]
+    private string $status;
 
-    #[EmbedOne(targetDocument: Model::class)]
-    private ?Model $model = null;
+    #[ODM\EmbedOne(targetDocument: Model::class)]
+    private Model $model;
 
-    #[Field(type: "string")]
-    private ?string $registration = null;
+    #[ODM\Field(type: "string")]
+    private string $registration;
 
-    #[EmbedMany(targetDocument: Incident::class)]
-    private array $incidentHistories = [];
+    #[ODM\EmbedMany(targetDocument: Incident::class, name: "incident_histories")]
+    private iterable $incidentHistories = [];
 
-    public function getId(): ?string
+    public function __construct()
     {
-        return $this->id;
+        $this->incidentHistories = [];
     }
 
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
-    }
+    // ===== GETTERS / SETTERS =====
 
-    public function getBrand(): ?string
-    {
-        return $this->brand;
-    }
+    public function getId(): ?string { return $this->id; }
 
-    public function setBrand(?string $brand): void
-    {
-        $this->brand = $brand;
-    }
+    public function getBrand(): string { return $this->brand; }
+    public function setBrand(string $brand): self { $this->brand = $brand; return $this; }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
+    public function getStatus(): string { return $this->status; }
+    public function setStatus(string $status): self { $this->status = $status; return $this; }
 
-    public function setStatus(?string $status): void
-    {
-        $this->status = $status;
-    }
+    public function getModel(): Model { return $this->model; }
+    public function setModel(Model $model): self { $this->model = $model; return $this; }
 
-    public function getModel(): ?Model
-    {
-        return $this->model;
-    }
+    public function getRegistration(): string { return $this->registration; }
+    public function setRegistration(string $registration): self { $this->registration = $registration; return $this; }
 
-    public function setModel(?Model $model): void
-    {
-        $this->model = $model;
-    }
+    public function getIncidentHistories(): iterable { return $this->incidentHistories; }
 
-    public function getRegistration(): ?string
-    {
-        return $this->registration;
-    }
-
-    public function setRegistration(?string $registration): void
-    {
-        $this->registration = $registration;
-    }
-
-    public function getIncidentHistories(): array
-    {
-        return $this->incidentHistories;
-    }
-
-    public function setIncidentHistories(array $incidentHistories): void
+    public function setIncidentHistories(iterable $incidentHistories): self
     {
         $this->incidentHistories = $incidentHistories;
+        return $this;
+    }
+
+    public function addIncident(Incident $incident): self
+    {
+        $this->incidentHistories[] = $incident;
+        return $this;
     }
 }

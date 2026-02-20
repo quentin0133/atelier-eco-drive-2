@@ -1,22 +1,20 @@
 <?php
+
 namespace App\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations\EmbeddedDocument;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\Field;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
-#[EmbeddedDocument]
+#[ODM\EmbeddedDocument]
 class Model
 {
-    #[Field(type: "string")]
-    private ?string $name = null;
+    #[ODM\Field(type: "string")]
+    private string $name;
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): void
+    public function __construct(string $name = "")
     {
         $this->name = $name;
     }
+
+    public function getName(): string { return $this->name; }
+    public function setName(string $name): self { $this->name = $name; return $this; }
 }

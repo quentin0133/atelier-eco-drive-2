@@ -8,7 +8,7 @@ function randomDate(start, end) {
 }
 
 const bulkVehicles = Array.from(
-    { length: 100000 }, (_, i) => (
+    { length: 100 }, (_, i) => (
         {
             brand: ["Audi", "Renault", "Peugeot", "Tesla", "Citroën", "Twingo"][Math.floor(Math.random() * 6)],
             status: ["AVAILABLE", "UNAVAILABLE"][Math.floor(Math.random() * 2)],
@@ -25,7 +25,7 @@ const bulkVehicles = Array.from(
 let vehiclesResult = db.vehicles.insertMany(bulkVehicles);
 
 const bulkTelemetryHistories = Array.from(
-    { length: 100000 }, (_, i) => (
+    { length: 100 }, (_, i) => (
         {
             last_position: {
                 latitude: Math.random() * 5,

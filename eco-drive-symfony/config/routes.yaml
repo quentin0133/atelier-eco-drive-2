@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
+
+# This file is the entry point to configure the routes of your app.
+# Methods with the #[Route] attribute are automatically imported.
+# See also https://symfony.com/doc/current/routing.html
+
+# To list all registered routes, run the following command:
+#   bin/console debug:router
+
+vehicles_index:
+    path: /vehicles
+    controller: App\Controller\VehicleController::index
+    methods: [GET]
+vehicle_add_incident:
+    path: /vehicles/{id}/incident
+    controller: App\Controller\VehicleController::addIncident
+    methods: [GET, POST]

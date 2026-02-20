@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Véhicules{% endblock %}
+
+{% block body %}
+  <h1>Liste des véhicules</h1>
+
+  {% if vehicles is empty %}
+    <p>Aucun véhicule trouvé.</p>
+  {% else %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Marque</th>
+          <th>Modèle</th>
+          <th>Statut</th>
+          <th>Immatriculation</th>
+          <th>Incidents</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in vehicles %}
+          <tr>
+            <td>{{ v.id }}</td>
+            <td>{{ v.brand }}</td>
+            <td>{{ v.model ? v.model.name : '-' }}</td>
+            <td>{{ v.status }}</td>
+            <td>{{ v.registration }}</td>
+            <td>{{ v.incidentHistories ? v.incidentHistories|length : 0 }}</td>
+            <td>
+                <a href="{{ path('vehicle_add_incident', {id: v.id}) }}">Ajouter un incident</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}
