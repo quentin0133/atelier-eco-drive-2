@@ -1,0 +1,16 @@
+{
+    "require": {
+        "symfony/skeleton": "^8.0",
+        "symfony/console": "^8.0",
+        "symfony/twig-bundle": "^8.0",
+        "mongodb/mongodb": "^2.2"
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true
+        }
+    },
+    "require-dev": {
+        "symfony/flex": "^2.10"
+    }
+}

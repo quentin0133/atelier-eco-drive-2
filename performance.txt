@@ -1,0 +1,47 @@
+12:02:58.167 [main] INFO fr.dawan.formation.App -- {
+  "executionSuccess": true,
+  "nReturned": 0,
+  "executionTimeMillis": 28,
+  "totalKeysExamined": 0,
+  "totalDocsExamined": 100000,
+  "executionStages": {
+    "isCached": false,
+    "stage": "COLLSCAN",
+    "filter": {
+      "$and": [
+        {
+          "timestamp": {
+            "$eq": {
+              "$date": "1991-08-25T12:16:54.635Z"
+            }
+          }
+        },
+        {
+          "vehicle_id": {
+            "$eq": {
+              "$oid": "699825ccfe2d1326e993d148"
+            }
+          }
+        }
+      ]
+    },
+    "nReturned": 0,
+    "executionTimeMillisEstimate": 14,
+    "works": 100001,
+    "advanced": 0,
+    "needTime": 100000,
+    "needYield": 0,
+    "saveState": 1,
+    "restoreState": 1,
+    "isEOF": 1,
+    "direction": "forward",
+    "docsExamined": 100000
+  },
+  "allPlansExecution": []
+}
+
+On peut remarquer qu'il a en stage "COLLSCAN" et qu'il parcours toutes les télémétries avant de trouver
+Cela confirme qu'on peut optimiser via un index
+
+12:02:58.130 [main] INFO fr.dawan.formation.App -- Temps sans index : 86ms
+12:02:58.409 [main] INFO fr.dawan.formation.App -- Temps avec index : 4ms

@@ -1,0 +1,33 @@
+services:
+  mongo-server:
+    image: mongo:latest
+    container_name: mongo-server-eco-drive
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./scripts:/data/shared
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-gui-eco-drive
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo-server-eco-drive
+  
+  php-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php-app-eco-drive
+    volumes:
+      - /eco-drive-symfony:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - mongo-server
+
+volumes:
+  mongo-data:
