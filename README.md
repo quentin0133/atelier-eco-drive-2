@@ -1,5 +1,8 @@
 **Atelier Eco Drive 2**
 
+Quentin YAHIA - quentin.yahia.pro@gmail.com
+Hippolyte GAUTHERON - hippolyte.gauth@gmail.com
+
 *La partie 1*
 Dans le dossier scripts, vous retrouverez l'insertion des 100 000 données
 load('/data/shared/eco-drive-insert-data.js')
